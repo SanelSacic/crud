@@ -1,0 +1,21 @@
+/* your styles go here */
+.card-body table.table.table-striped.table-sm tbody #table-name {
+    width: 25%;
+}
+
+.card-body table.table.table-striped.table-sm tbody #table-last-name {
+    width: 15%;
+}
+
+.card-body table.table.table-striped.table-sm tbody #table-btn {
+    width: 15%;
+}
+
+.card-body table.table.table-striped.table-sm tbody #table-desc {
+    width: 25%;
+    font-size: 11px;
+}
+
+.card-body table.table.table-striped.table-sm tbody #table-birth {
+    width: 10%;
+}

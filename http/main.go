@@ -290,9 +290,9 @@ func (c *Crud) createBook(w http.ResponseWriter, r *http.Request) {
 		AuthorID:    r.FormValue("author-id"),
 	}
 
-	if _, err := c.db.UpdateBook(&book); err != nil {
+	if _, err := c.db.CreateBook(&book); err != nil {
 		log.Println(err)
 	}
 
-	http.Redirect(w, r, "/books", http.StatusFound)	
+	http.Redirect(w, r, "/books", http.StatusFound)
 }

@@ -84,7 +84,7 @@ func (db *DB) RetrieveBook(id string) ([]byte, error) {
 // CreateBook creates a new Book in the database.
 func (db *DB) CreateBook(b *Book) ([]byte, error) {
 
-	stmt, err := db.Prepare("INSERT INTO books set title = ?, description = ?, author-id = ?,image = ?, published = ?")
+	stmt, err := db.Prepare("INSERT INTO books set title = ?, description = ?,published = ?,image = ?,author_id = ? ")
 	if err != nil {
 		return nil, errors.Wrapf(err, ": rows.Prepare.Insert(%v) :", b)
 	}

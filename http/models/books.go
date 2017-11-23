@@ -90,7 +90,7 @@ func (db *DB) CreateBook(b *Book) ([]byte, error) {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(&b.Title, &b.Description, &b.AuthorID, &b.Image, &b.Published)
+	_, err = stmt.Exec(&b.Title, &b.Description, &b.Published, &b.Image, &b.AuthorID)
 	if err != nil {
 		return nil, errors.Wrapf(err, ": rows.Exec : %v", b)
 	}

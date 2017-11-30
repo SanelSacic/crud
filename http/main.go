@@ -10,7 +10,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/gocode/crud/http/models"
+	"github.com/gocode/crud/http/web//models"
 )
 
 type Crud struct {
@@ -28,6 +28,9 @@ func renderTemplate(w http.ResponseWriter, temp string, p *Pagedata) {
 	if err := t.ExecuteTemplate(w, temp+".html", &p); err != nil {
 		log.Printf("Error rendering template [%s] : %s", temp, err)
 	}
+
+	x := mux.Route{}
+
 }
 
 func main() {
@@ -41,18 +44,19 @@ func main() {
 
 	r := mux.NewRouter()
 	// --------- >
-	r.HandleFunc("/index", cru.serveIndexPage)
-	r.HandleFunc("/authors", cru.serveAuthorPage)
-	r.HandleFunc("/edit-author/{id:[0-9]+}", cru.editAuthor)
-	r.HandleFunc("/update-author", cru.updateAuthor)
-	r.HandleFunc("/delete-author/{id:[0-9]+}", cru.deleteAuthor)
-	r.HandleFunc("/create-author", cru.createAuthor)
+	r.HandleFunc("/index", cru.serveIndexPage).Methods("GET")
 	// --------- >
-	r.HandleFunc("/books", cru.serveBookPage)
-	r.HandleFunc("/edit-book/{id:[0-9]+}", cru.editBook)
-	r.HandleFunc("/update-book", cru.updateBook)
-	r.HandleFunc("/delete-book/{id:[0-9]+}", cru.DeleteBook)
-	r.HandleFunc("/create-book", cru.createBook)
+	r.HandleFunc("/authors", cru.serveAuthorPage).Methods("GET")
+	r.HandleFunc("/edit-author/{id:[0-9]+}", cru.editAuthor).Methods("GET")
+	r.HandleFunc("/update-author", cru.updateAuthor).Methods("POST")
+	r.HandleFunc("/delete-author/{id:[0-9]+}", cru.deleteAuthor).Methods("GET")
+	r.HandleFunc("/create-author", cru.createAuthor).Methods("POST")
+	// --------- >
+	r.HandleFunc("/books", cru.serveBookPage).Methods("GET")
+	r.HandleFunc("/edit-book/{id:[0-9]+}", cru.editBook)Methods("GET")
+	r.HandleFunc("/update-book", cru.updateBook).Methods("POST")
+	r.HandleFunc("/delete-book/{id:[0-9]+}", cru.DeleteBook).Methods("GET")
+	r.HandleFunc("/create-book", cru.createBook).Methods("POST")
 	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		log.Println("Listen and Serve ...", err)

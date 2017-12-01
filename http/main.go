@@ -10,7 +10,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/gocode/crud/http/web//models"
+	"github.com/gocode/crud/http/web/models"
 )
 
 type Crud struct {
@@ -28,9 +28,6 @@ func renderTemplate(w http.ResponseWriter, temp string, p *Pagedata) {
 	if err := t.ExecuteTemplate(w, temp+".html", &p); err != nil {
 		log.Printf("Error rendering template [%s] : %s", temp, err)
 	}
-
-	x := mux.Route{}
-
 }
 
 func main() {
@@ -53,7 +50,7 @@ func main() {
 	r.HandleFunc("/create-author", cru.createAuthor).Methods("POST")
 	// --------- >
 	r.HandleFunc("/books", cru.serveBookPage).Methods("GET")
-	r.HandleFunc("/edit-book/{id:[0-9]+}", cru.editBook)Methods("GET")
+	r.HandleFunc("/edit-book/{id:[0-9]+}", cru.editBook).Methods("GET")
 	r.HandleFunc("/update-book", cru.updateBook).Methods("POST")
 	r.HandleFunc("/delete-book/{id:[0-9]+}", cru.DeleteBook).Methods("GET")
 	r.HandleFunc("/create-book", cru.createBook).Methods("POST")

@@ -30,7 +30,7 @@ func main() {
 	r.HandleFunc("/delete-author/{id:[0-9]+}", cru.DeleteAuthor).Methods("GET")
 	r.HandleFunc("/create-author", cru.CreateAuthor).Methods("POST")
 	// --------- >
-	r.HandleFunc("/books", cru.ListBook).Methods("GET")
+	r.HandleFunc("/books", cru.ListBooks).Methods("GET")
 	r.HandleFunc("/edit-book/{id:[0-9]+}", cru.EditBook).Methods("GET")
 	r.HandleFunc("/update-book", cru.UpdateBook).Methods("POST")
 	r.HandleFunc("/delete-book/{id:[0-9]+}", cru.DeleteBook).Methods("GET")

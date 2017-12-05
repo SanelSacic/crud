@@ -2,11 +2,11 @@ package web
 
 import (
 	"encoding/json"
-	"html/template"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"text/template"
 
 	"github.com/gocode/crud/http/web/models"
 	"github.com/gorilla/mux"
@@ -21,11 +21,11 @@ type Pagedata struct {
 	EntryB []models.Book
 }
 
-var t = template.Must(template.ParseFiles("theme/index.html", "theme/authors.html", "theme/editAuthor.html", "theme/books.html", "theme/editBook.html"))
+var t = template.Must(template.ParseFiles("././theme/index.html", "theme/authors.html", "theme/editAuthor.html", "theme/books.html", "theme/editBook.html"))
 
 func renderTemplate(w http.ResponseWriter, temp string, p *Pagedata) {
 	if err := t.ExecuteTemplate(w, temp+".html", &p); err != nil {
-		log.Printf("Error rendering template [%s] : %s", temp, err)
+		log.Printf("Error rendering template [%s] : %s\n", temp, err)
 	}
 }
 

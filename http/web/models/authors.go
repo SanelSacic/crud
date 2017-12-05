@@ -55,7 +55,7 @@ func (db *DB) RetrieveAuthor(id string) ([]byte, error) {
 	}
 	defer rows.Close()
 
-	var res []Author
+	var res []*Author
 
 	if rows.Next() {
 		var a Author
@@ -63,7 +63,7 @@ func (db *DB) RetrieveAuthor(id string) ([]byte, error) {
 		if err != nil {
 			return nil, errors.Wrapf(err, ": rows.Scann : %v", a)
 		}
-		res = append(res, a)
+		res = append(res, &a)
 	}
 
 	if err = rows.Err(); err != nil {

@@ -1,8 +1,0 @@
-runitme: go
-api_version: go1
-
-handlers: 
--url: /theme
- static_dir: theme
-
--url: /.*

@@ -6,8 +6,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/gocode/crud/http/web"
-	"github.com/gocode/crud/http/web/models"
+	"github.com/workspace/golang-crud/http/web"
+	"github.com/workspace/golang-crud/http/web/models"
 )
 
 func main() {

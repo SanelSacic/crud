@@ -8,8 +8,8 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/gocode/crud/http/web/models"
 	"github.com/gorilla/mux"
+	"github.com/workspace/golang-crud/http/web/models"
 )
 
 type Crud struct {

@@ -41,4 +41,6 @@ func Create(u *User) (*User, error) {
 		write.Rollback()
 		return nil, errors.Wrapf(err, "Insert[write.Exec] %s", stmtInsertUser)
 	}
+
+	return &user, write.Commit()
 }

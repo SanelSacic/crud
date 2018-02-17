@@ -3,6 +3,7 @@ package users
 import (
 	"time"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
 	"github.com/workspace/golang-crud/http/internal/platform/db"
 )
@@ -36,7 +37,7 @@ func Create(u *User) (*User, error) {
 		DataCreated: &now,
 	}
 
-	_, err = write.Exec(stmtInsertUser, &user.UserType, &user.FirstName, &user.LastName, &user.Password, &user.Email, &user.Company, &user.Image, &user.DateCreated)
+	_, err = write.Exec(stmtInsertUser, &user.UserType, &user.FirstName, &user.LastName, &user.Password, &user.Email, &user.Company, &user.Image, &user.DataCreated)
 	if err != nil {
 		write.Rollback()
 		return nil, errors.Wrapf(err, "Insert[write.Exec] %s", stmtInsertUser)
@@ -46,18 +47,31 @@ func Create(u *User) (*User, error) {
 }
 
 // Update updates a user in the database.
-func Update(u *User) error {
+func Update(u *User) (*User, error) {
 	write, err := db.ReadDB.Begin()
 	if err != nil {
 		write.Rollback()
-		return errors.Wrapf(err, "Update[db.ReadDB.Begin]")
+		return nil, errors.Wrapf(err, "Update[db.ReadDB.Begin]")
 	}
 
-	_, err = write.Exec(stmtUpdateUser, &u.UserType, &u.FirstName, &u.LastName, &u.Password, &u.Email, &u.Company, &u.Image, &u.UserID)
+	now := time.Now()
+
+	user := User{
+		UserType:     u.UserType,
+		FirstName:    u.FirstName,
+		LastName:     u.LastName,
+		Password:     u.Password,
+		Email:        u.Email,
+		Company:      u.Company,
+		Image:        u.Image,
+		DataModified: &now,
+	}
+
+	_, err = write.Exec(stmtUpdateUser, &user.UserType, &user.FirstName, &user.LastName, &user.Password, &user.Email, &user.Company, &user.Image, &user.UserID)
 	if err != nil {
 		write.Rollback()
-		return errors.Wrapf(err, "Update[write.Exec] %s \n %v", stmtUpdateUser, u)
+		return nil, errors.Wrapf(err, "Update[write.Exec] %s \n %v", stmtUpdateUser, u)
 	}
 
-	return write.Commit()
+	return &user, write.Commit()
 }

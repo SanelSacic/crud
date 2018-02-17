@@ -75,3 +75,33 @@ func Update(u *User) (*User, error) {
 
 	return &user, write.Commit()
 }
+
+// Delete removes user from database.
+func Delete(userID int) error {
+	writeDb, err := db.ReadDB.Begin()
+	if err != nil {
+		writeDb.Rollback()
+		return errors.Wrap(err, "Delete[db.ReadDB.Begin]")
+	}
+
+	_, err = writeDb.Exec(stmtDeleteUser, userID)
+	if err != nil {
+		writeDb.Rollback()
+		return errors.Wrapf(err, "Could not delete user with id %d", userID)
+	}
+
+	return writeDb.Commit()
+}
+
+// Retrieve returns specific user from the system.
+func Retrieve(userID int) (*User, error) {
+
+	var u User
+
+	row := db.ReadDB.QueryRow(stmtRetrieveUser, userID)
+	if err := row.Scan(&u.UserID, &u.UserType, &u.FirstName, &u.LastName, &u.Email, &u.Password, &u.Company, &u.Image); err != nil {
+		return nil, errors.Wrapf(err, "Could not retrieve user with the given id %d", userID)
+	}
+
+	return &u, nil
+}

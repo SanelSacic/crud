@@ -44,3 +44,20 @@ func Create(u *User) (*User, error) {
 
 	return &user, write.Commit()
 }
+
+// Update updates a user in the database.
+func Update(u *User) error {
+	write, err := db.ReadDB.Begin()
+	if err != nil {
+		write.Rollback()
+		return errors.Wrapf(err, "Update[db.ReadDB.Begin]")
+	}
+
+	_, err = write.Exec(stmtUpdateUser, &u.UserType, &u.FirstName, &u.LastName, &u.Password, &u.Email, &u.Company, &u.Image, &u.UserID)
+	if err != nil {
+		write.Rollback()
+		return errors.Wrapf(err, "Update[write.Exec] %s \n %v", stmtUpdateUser, u)
+	}
+
+	return write.Commit()
+}

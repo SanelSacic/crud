@@ -15,7 +15,7 @@ var ReadDB *sql.DB
 var ErrInvalidDBProvider = errors.New("invalid DB provider")
 
 // NewMysql creates a new mysql connection.
-func NewMysql(dataSource string) error {
+func NewMySql(dataSource string) error {
 	log.Println("Preparing mysql connection...")
 
 	// Open a database value. Specify the mysql driver

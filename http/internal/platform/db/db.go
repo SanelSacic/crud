@@ -3,7 +3,6 @@ package db
 import (
 	"database/sql"
 	"log"
-	"time"
 
 	"github.com/pkg/errors"
 )
@@ -15,22 +14,20 @@ var ReadDB *sql.DB
 var ErrInvalidDBProvider = errors.New("invalid DB provider")
 
 // NewMysql creates a new mysql connection.
-func NewMySql(dataSource string) error {
+func NewMySql() error {
 	log.Println("Preparing mysql connection...")
 
 	// Open a database value. Specify the mysql driver
 	// for database/sql
 	var err error
-	ReadDB, err = sql.Open("mysql", dataSource)
+	ReadDB, err = sql.Open("mysql", DataSource)
 	if err != nil {
-		return errors.Wrapf(err, "[sql.Open] %s", dataSource)
+		return errors.Wrapf(err, "[sql.Open] %s", DataSource)
 	}
 
-	// Set the connection timeout.
-	timeout := 60 * time.Second
-
-	ReadDB.SetMaxIdleConns(200)
-	ReadDB.SetConnMaxLifetime(timeout)
+	// Defined in config.go
+	ReadDB.SetMaxIdleConns(MaxIdleConnections)
+	ReadDB.SetConnMaxLifetime(TimeoutConnection)
 
 	// sql.Open() does not establish any connection to the
 	// database. It just prepare the database connection value

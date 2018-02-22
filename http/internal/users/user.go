@@ -1,6 +1,7 @@
 package users
 
 import (
+	"log"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -14,6 +15,7 @@ const (
 	stmtDeleteUser   = "DELETE FROM users WHERE id = ?"
 	stmtRetrieveUser = "SELECT id,userType,firstName,lastName,email,company,image FROM users WHERE id = ?"
 	stmtListUsers    = "SELECT id,userType,firstName,lastName,email,company,image FROM users"
+	stmtCountUsers   = "SELECT count(id) FROM users"
 )
 
 // Create inserts a new user into the database.
@@ -93,15 +95,48 @@ func Delete(userID int) error {
 	return writeDb.Commit()
 }
 
-// Retrieve returns specific user from the system.
+// Retrieve returns specific user from database.
 func Retrieve(userID int) (*User, error) {
 
 	var u User
 
 	row := db.ReadDB.QueryRow(stmtRetrieveUser, userID)
-	if err := row.Scan(&u.UserID, &u.UserType, &u.FirstName, &u.LastName, &u.Email, &u.Password, &u.Company, &u.Image); err != nil {
+	if err := row.Scan(&u.UserID, &u.UserType, &u.FirstName, &u.LastName, &u.Email, &u.Company, &u.Image); err != nil {
 		return nil, errors.Wrapf(err, "Could not retrieve user with the given id %d", userID)
 	}
 
 	return &u, nil
+}
+
+// List returns all existing users from database.
+func List() ([]User, error) {
+	var users []User
+
+	rows, err := db.ReadDB.Query(stmtListUsers)
+	if err != nil {
+		return nil, errors.Wrap(err, "List[db.ReadDB.Begin]")
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		var u User
+		if err := rows.Scan(&u.UserID, &u.UserType, &u.FirstName, &u.LastName, &u.Email, &u.Password, &u.Company, &u.Image); err != nil {
+			return nil, errors.Wrap(err, "Could not read data from database")
+		}
+
+		users = append(users, u)
+	}
+
+	return users, nil
+}
+
+// Count return number of users in database.
+func Count() (count int) {
+	rows, _ := db.ReadDB.Query(stmtCountUsers)
+	if rows.Next() {
+		err := rows.Scan(count)
+		log.Fatalf("%s", err)
+	}
+
+	return count
 }

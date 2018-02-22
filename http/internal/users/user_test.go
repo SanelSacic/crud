@@ -40,11 +40,11 @@ func TestCreate(t *testing.T) {
 	{
 		t.Log("When using a valid user model")
 		{
-			_, err := Create(&insert)
+			user, err := Create(&insert)
 			if err != nil {
 				t.Fatalf("\t%s\tShould be able to create a new user in the system %v", failed, insert)
 			}
-			t.Logf("\t%s\tShould be able to create a new user in the system.", succeed)
+			t.Logf("\t%s\tShould be able to create a new user in the system : %+v", succeed, user)
 		}
 	}
 
@@ -74,15 +74,51 @@ func TestUpdate(t *testing.T) {
 	{
 		t.Log("When using a valid user model")
 		{
-			_, err := Update(&update)
+			user, err := Update(&update)
 			if err != nil {
 				t.Fatalf("\t%s\tShould be able to update user in the system %v", failed, update)
 			}
-			t.Logf("\t%s\tShould be able to update user in the system.", succeed)
+			t.Logf("\t%s\tShould be able to update user in the system : %+v", succeed, user)
+			t.Log(now)
 		}
 	}
 }
 
+func TestRetrieve(t *testing.T) {
+	if err := connect(); err != nil {
+		t.Error(db.ErrInvalidDBProvider, err)
+	}
+
+	userID := 1
+
+	t.Log("Given the neet to retrieve user")
+	{
+		t.Log("When using a valid user model")
+		{
+			user, err := Retrieve(userID)
+			if err != nil {
+				t.Fatalf("\t%s\tShould be able to retrieve user from the system %v", failed, err)
+			}
+			t.Logf("\t%s\tShould be able to retrieve user from the system : \n %+v", succeed, user)
+		}
+	}
+}
+
+func TestList(t *testing.T) {
+	if err := connect(); err != nil {
+		t.Error(db.ErrInvalidDBProvider, err)
+	}
+
+	t.Log("Given the need to retrieve all users from system")
+	{
+		users, err := List()
+		if err != nil {
+			t.Fatalf("\t%s\tShould be able to retrieve users from system %v", failed, err)
+		}
+		t.Logf("\t%s\tShould be able to retrieve users from system : \n %+v", succeed, users)
+	}
+}
+
 func connect() error {
-	return db.NewMySql("root:sonyss-a3@/made")
+	return db.NewMySql()
 }
